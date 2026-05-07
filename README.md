@@ -11,7 +11,7 @@ Supports video object tracking and single-image segmentation. Click on an object
 
 ## Features
 
-- Full SAM2.1 base_plus architecture on MLX
+- SAM2.1 small / base_plus / large architectures on MLX
 - Video object tracking with memory bank propagation
 - Single-image segmentation with point prompts
 - Interactive click-to-select via OpenCV
@@ -25,24 +25,28 @@ Supports video object tracking and single-image segmentation. Click on an object
 ## Install
 
 ```bash
+git clone https://github.com/eisneim/sam2.1_mlx.git
+cd sam2.1_mlx
 pip install mlx opencv-python safetensors numpy
 ```
 
 ## Weights
 
-Download the SAM2.1 base_plus checkpoint from Meta:
+Download pre-converted MLX weights from Hugging Face:
 
 ```bash
-# PyTorch checkpoint (need conversion)
-wget https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_base_plus.pt -P weights/
+# Base Plus (recommended)
+huggingface-cli download eisneim/sam2.1_mlx_weights sam2.1_hiera_base_plus.safetensors --local-dir weights/
+
+# Small (faster)
+huggingface-cli download eisneim/sam2.1_mlx_weights sam2.1_hiera_small.safetensors --local-dir weights/
 ```
 
-Convert to MLX safetensors format:
+Or convert from PyTorch yourself:
 
 ```bash
-python -m src.sam2.convert \
-    --src weights/sam2.1_hiera_base_plus.pt \
-    --dst weights/sam2.1_hiera_base_plus.safetensors
+wget https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_base_plus.pt -P weights/
+python -m src.sam2.convert --src weights/sam2.1_hiera_base_plus.pt --dst weights/sam2.1_hiera_base_plus.safetensors
 ```
 
 ## Usage
@@ -52,13 +56,15 @@ python -m src.sam2.convert \
 Click on an object in the first frame, then the model tracks it through all frames:
 
 ```bash
-python inference_video.py --video path/to/video.mp4
+python inference_video.py -i path/to/video.mp4
+python inference_video.py -i path/to/video.mp4 --model small
 ```
 
 Options:
-- `--video` — input video file
+- `-i, --video` — input video file
+- `--model` — `small`, `base_plus` (default), or `large`
+- `--weights` — path to `.safetensors` weights (auto-selected by model)
 - `--output` — output directory (default: `output/`)
-- `--weights` — path to `.safetensors` weights (default: `weights/sam2.1_hiera_base_plus.safetensors`)
 
 Outputs:
 - `tracked_overlay.mp4` — video with green mask overlay
@@ -69,13 +75,9 @@ Outputs:
 Click on an object in the image to get its segmentation mask:
 
 ```bash
-python inference_image.py --image path/to/image.jpg
+python inference_image.py -i path/to/image.jpg
+python inference_image.py -i path/to/image.jpg --model small
 ```
-
-Options:
-- `--image` — input image file
-- `--output` — output directory (default: `output/`)
-- `--weights` — path to `.safetensors` weights
 
 Outputs:
 - `{name}_overlay.png` — image with green mask overlay
@@ -86,6 +88,7 @@ Outputs:
 ```
 src/sam2/
 ├── __init__.py          # Package exports
+├── build.py             # Model configs and builder
 ├── convert.py           # PyTorch → MLX weight converter
 ├── hiera.py             # Hiera vision backbone (windowed attention)
 ├── image_encoder.py     # FPN neck + image encoder wrapper
