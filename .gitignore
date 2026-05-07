@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+output/
+weights/*.pt
+weights/*.safetensors
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
