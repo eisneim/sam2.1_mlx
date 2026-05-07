@@ -4,8 +4,9 @@ SAM2.1 (Segment Anything Model 2.1) ported to Apple MLX for native inference on 
 
 Supports video object tracking and single-image segmentation. Click on an object in the first frame, and the model tracks it through the entire video.
 
-<video src="https://github.com/user-attachments/assets/63d26cc3-4146-4377-b352-3b44b0b76627">
+<video src="https://github.com/user-attachments/assets/46cf353c-e147-44b8-b6d9-c0d050e72067">
 </video>
+
 
 
 
