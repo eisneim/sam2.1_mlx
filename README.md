@@ -36,10 +36,10 @@ Download pre-converted MLX weights from Hugging Face:
 
 ```bash
 # Base Plus (recommended)
-huggingface-cli download eisneim/sam2.1_mlx_weights sam2.1_hiera_base_plus.safetensors --local-dir weights/
+huggingface-cli download eisneim/sam2.1_mlx sam2.1_hiera_base_plus.safetensors --local-dir weights/
 
 # Small (faster)
-huggingface-cli download eisneim/sam2.1_mlx_weights sam2.1_hiera_small.safetensors --local-dir weights/
+huggingface-cli download eisneim/sam2.1_mlx sam2.1_hiera_small.safetensors --local-dir weights/
 ```
 
 Or convert from PyTorch yourself:
